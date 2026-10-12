@@ -1,0 +1,289 @@
+<!DOCTYPE html><html class="dark" lang="en" ><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>RAG AI AGENT Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#b5c4ff","outline-variant": "#434655","secondary-fixed-dim": "#b9c8de","surface-container-high": "#2a2a2d","on-secondary-container": "#a7b6cc","surface-variant": "#353438","surface": "#131316","inverse-surface": "#e4e1e6","on-error": "#690005","on-surface-variant": "#c3c5d8","tertiary-container": "#77767a","secondary-fixed": "#d4e4fa","error": "#ffb4ab","on-error-container": "#ffdad6","surface-container": "#1f1f22","error-container": "#93000a","surface-bright": "#39393c","inverse-on-surface": "#303033","on-tertiary-container": "#ffffff","on-background": "#e4e1e6","on-tertiary": "#303033","on-tertiary-fixed": "#1b1b1e","primary": "#b5c4ff","surface-container-low": "#1b1b1e","outline": "#8d90a1","tertiary": "#c8c6c9","on-primary-fixed-variant": "#003dab","on-primary": "#00297a","on-secondary-fixed": "#0d1c2d","on-secondary": "#233143","inverse-primary": "#0052de","on-primary-container": "#ffffff","on-primary-fixed": "#00174c","background": "#131316","tertiary-fixed": "#e4e1e5","primary-fixed-dim": "#b5c4ff","primary-container": "#2d6bff","tertiary-fixed-dim": "#c8c6c9","surface-container-lowest": "#0e0e11","on-secondary-fixed-variant": "#39485a","surface-dim": "#131316","primary-fixed": "#dbe1ff","secondary": "#b9c8de","on-surface": "#e4e1e6","secondary-container": "#39485a","surface-container-highest": "#353438","on-tertiary-fixed-variant": "#47464a"
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem","lg": "0.5rem","xl": "0.75rem","full": "9999px"},
+                    spacing: {"base": "4px","sm": "8px","md": "16px","xs": "4px","lg": "24px","xl": "40px","sidebar_width": "280px","container_max": "1200px"},
+                    fontFamily: {"body-lg": ["Inter"],"body-md": ["Inter"],"headline-md": ["Inter"],"headline-lg-mobile": ["Inter"],"mono": ["JetBrains Mono", "monospace"],"label-sm": ["Inter"],"headline-lg": ["Inter"],"display": ["Inter"]},
+                    fontSize: {"body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],"body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],"headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],"headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],"mono": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],"label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],"headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],"display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]}
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {background-color: rgba(28, 28, 31, 0.7);backdrop-filter: blur(12px);border: 1px solid #2A2A2E;box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);}
+        .glow-overlay {box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);}
+        html:not(.dark) body {background-color: #F8FAFC !important;color: #0F172A !important;}
+        html:not(.dark) header {background-color: rgba(255, 255, 255, 0.85) !important;border-color: #E2E8F0 !important;}
+        html:not(.dark) nav {background-color: #FFFFFF !important;border-color: #E2E8F0 !important;}
+        html:not(.dark) .glass-panel {background-color: #FFFFFF !important;border-color: #E2E8F0 !important;box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.06);}
+        html:not(.dark) .glow-overlay {box-shadow: none !important;}
+        html:not(.dark) #chat-messages-box {background-color: #F1F5F9 !important;}
+        html:not(.dark) .ai-bubble {background-color: #FFFFFF !important;border-color: #E2E8F0 !important;color: #1E293B !important;box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        html:not(.dark) .ai-bubble p {color: #1E293B !important;}
+        html:not(.dark) #extracted-text-box,html:not(.dark) #raw-text-input {background-color: #F8FAFC !important;border-color: #E2E8F0 !important;color: #0F172A !important;}
+        html:not(.dark) #chat-form {background-color: #FFFFFF !important;border-color: #E2E8F0 !important;}
+        html:not(.dark) #chat-input {color: #0F172A !important;}
+        html:not(.dark) #chat-input::placeholder {color: #94A3B8 !important;}
+        html:not(.dark) .status-box-inner {background-color: #F8FAFC !important;border-color: #E2E8F0 !important;color: #475569 !important;}
+        ::-webkit-scrollbar {width: 6px;height: 6px;}::-webkit-scrollbar-track {background: transparent;}::-webkit-scrollbar-thumb {background: #353438;border-radius: 3px;}::-webkit-scrollbar-thumb:hover {background: #434655;}
+        @keyframes scanBeam {0% { top: 0%; opacity: 0; }15% { opacity: 0.9; }85% { opacity: 0.9; }100% { top: 100%; opacity: 0; }}.scan-line {animation: scanBeam 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;}
+        @keyframes pulseGlow {0%, 100% { box-shadow: 0 0 12px rgba(45, 107, 255, 0.25); border-color: rgba(181, 196, 255, 0.6); }50% { box-shadow: 0 0 24px rgba(45, 107, 255, 0.55); border-color: rgba(181, 196, 255, 0.9); }}.pulse-border {animation: pulseGlow 1.6s ease-in-out infinite;}
+</style>
+</head>
+<body class="bg-background text-on-surface h-screen overflow-hidden flex flex-col font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<header class="bg-surface/70 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-md h-16">
+<div class="flex items-center gap-md"><div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_#2d6bff] animate-pulse"></div><div class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">RAG AI AGENT</div><span class="text-[10px] font-mono uppercase bg-primary-container/30 text-primary border border-primary/30 px-2 py-0.5 rounded-full font-medium ml-1">v2.4 Active</span></div></div>
+<div class="flex items-center gap-md"><button class="text-on-surface-variant hover:bg-surface-container-high p-sm rounded-lg" id="theme-toggle"><span class="material-symbols-outlined">dark_mode</span></button></div>
+</header>
+<div class="flex flex-1 pt-16 h-full relative">
+<nav class="hidden md:flex flex-col py-lg px-md bg-surface-container fixed left-0 top-16 h-[calc(100vh-64px)] w-[80px] border-r border-outline-variant/20 shadow-lg justify-between items-center z-40">
+<div class="flex flex-col gap-lg w-full items-center"><button class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high p-sm rounded-lg flex flex-col items-center gap-xs w-full" id="history-btn"><span class="material-symbols-outlined text-primary">history</span><span class="font-label-sm text-label-sm text-primary">History</span></button></div>
+<div class="flex flex-col gap-md w-full items-center"><button class="text-on-surface-variant hover:bg-surface-container-high p-sm rounded-lg" id="settings-btn"><span class="material-symbols-outlined">settings</span></button><div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant"><img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyPcOPqI-uliUEV_zE6xgTkH4ot-7w4aLy88Y_-jtPMHo7P4gWexbGIzu4pOO5eaqaASwSyU06k5DG-gmlPSaZMWFYX1Qyz0PZ3_NjgnXxsIWZuoZxyurjK35sIFXcGY4okcSDjpCnY97M0wrtPK-0dLVBcs_82-b9kezAXbPbObVsqOIYGUc9AAKgp5d9pUymhCjVJhuk32mcKJwIo3EEed8BhAgDp56TL6fNobhApETksU775EQ1"></div></div>
+</nav>
+<main class="flex-1 flex flex-col lg:flex-row gap-lg p-lg md:ml-[80px] h-full overflow-hidden">
+<div class="flex flex-col gap-lg w-full lg:w-1/3 h-full overflow-y-auto pr-sm">
+<div class="glass-panel rounded-xl flex flex-col h-1/2 p-md relative overflow-hidden group">
+<div class="glow-overlay absolute inset-0 rounded-xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-sm"><div class="flex items-center gap-sm"><span class="material-symbols-outlined text-primary">upload_file</span><h2 class="font-headline-md text-headline-md">PDF Upload</h2></div><span class="font-mono text-[11px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded border border-outline-variant/30" id="pdf-status-tag">Ready</span></div>
+<input accept=".pdf" class="hidden" id="pdf-file-input" type="file">
+<div class="flex-1 border-2 border-dashed border-outline-variant/50 rounded-lg flex flex-col items-center justify-center p-md hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer relative overflow-hidden group/upload" id="upload-area">
+<div class="hidden absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_15px_#38bdf8] z-30 scan-line" id="scan-beam-line"></div>
+<div class="flex flex-col items-center justify-center text-center w-full h-full" id="upload-content"><div class="w-14 h-14 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover/upload:scale-110 transition-transform mb-2"><span class="material-symbols-outlined text-3xl">arrow_upward</span></div><p class="font-body-md text-body-md font-medium mb-1">Drag & drop your PDF here</p><p class="font-label-sm text-label-sm text-on-surface-variant mb-2">or click to browse</p><span class="inline-flex items-center gap-1 text-[11px] font-mono text-primary/80 bg-primary/10 border border-primary/20 px-2.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-xs">speed</span> Gemini + FAISS RAG</span></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 pointer-events-none bg-surface/90 backdrop-blur-md z-20 px-md text-center" id="upload-processing"><div class="relative mb-3"><div class="w-12 h-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin"></div><span class="material-symbols-outlined text-primary text-xl absolute inset-0 flex items-center justify-center">memory</span></div><p class="font-body-md text-primary font-medium mb-2" id="upload-step-text">Uploading...</p><div class="w-48 bg-surface-container-high rounded-full h-2 overflow-hidden border border-outline-variant/30"><div class="bg-gradient-to-r from-primary to-primary-container h-full transition-all rounded-full" id="upload-progress-fill" style="width: 15%"></div></div><span class="font-mono text-xs text-on-surface-variant mt-1.5" id="upload-pct-label">15%</span></div>
+<div class="hidden absolute inset-0 bg-[#161922] p-4 flex flex-col items-center justify-center text-center z-20 border border-emerald-500/40 rounded-lg" id="upload-complete-badge"><div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mb-2"><span class="material-symbols-outlined text-xl">check_circle</span></div><p class="font-body-md font-semibold text-xs truncate max-w-[220px]" id="uploaded-filename">file.pdf</p><p class="text-[11px] text-emerald-400/90 font-mono mt-0.5" id="uploaded-meta">Indexed</p><div class="flex items-center gap-2 mt-3"><button class="text-xs bg-surface-container-high hover:bg-surface-container px-3 py-1 rounded border border-outline-variant/30" id="reupload-btn">Replace</button><button class="text-xs bg-primary/20 text-primary hover:bg-primary hover:text-on-primary px-3 py-1 rounded font-medium" id="view-chunks-btn">View Chunks</button></div></div>
+</div>
+</div>
+<div class="glass-panel rounded-xl flex flex-col h-1/2 p-md relative overflow-hidden" id="text-workspace-card">
+<div class="glow-overlay absolute inset-0 rounded-xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-sm border-b border-outline-variant/30 pb-sm"><div class="flex items-center gap-sm"><span class="material-symbols-outlined text-secondary">description</span><h2 class="font-headline-md text-headline-md">Text</h2></div><div class="flex items-center bg-surface-container-lowest p-0.5 rounded-lg border border-outline-variant/30"><button class="px-2.5 py-1 text-xs font-medium rounded-md bg-surface-container-high text-primary shadow-sm" id="tab-extracted">Extracted</button><button class="px-2.5 py-1 text-xs font-medium rounded-md text-on-surface-variant" id="tab-paste">Paste</button></div></div>
+<div class="flex-1 flex flex-col min-h-0" id="view-extracted-container"><div class="flex-1 bg-[#131316] rounded-lg p-md overflow-y-auto border border-outline-variant/20 font-mono text-mono text-on-surface-variant leading-relaxed select-text" id="extracted-text-box"><span class="text-primary/70">// Status: Ready for document source</span><br><br><span class="opacity-50 text-xs">Upload a PDF above to enable RAG. Your embeddings will be stored in FAISS.</span></div><div class="flex items-center justify-between pt-2 mt-1 text-[11px] font-mono text-on-surface-variant/80"><span id="extracted-stat-tokens">Tokens: 0</span><div class="flex items-center gap-2"><button class="hover:text-primary flex items-center gap-1" id="copy-extracted-btn"><span class="material-symbols-outlined text-xs">content_copy</span> Copy</button></div></div></div>
+<div class="hidden flex-1 flex flex-col min-h-0" id="view-paste-container"><div class="flex-1 relative flex flex-col"><textarea class="w-full flex-1 bg-[#101013] rounded-lg p-3 border border-outline-variant/30 font-mono text-xs text-on-surface placeholder:text-on-surface-variant/40 focus:border-primary/60 resize-none outline-none" id="raw-text-input" placeholder="Paste raw document text here..."></textarea></div><div class="flex items-center justify-between pt-2 mt-1 text-[11px] font-mono"><div class="text-on-surface-variant flex items-center gap-3"><span id="input-word-counter">0 words</span><span>•</span><span id="input-char-counter">0 chars</span></div><div class="flex items-center gap-2"><button class="px-2.5 py-1 text-on-surface-variant" id="clear-input-btn">Clear</button><button class="px-3 py-1 bg-primary text-on-primary font-medium rounded-md hover:bg-primary-container shadow-sm flex items-center gap-1 text-xs" id="process-text-btn"><span class="material-symbols-outlined text-xs">bolt</span>Process</button></div></div></div>
+</div>
+</div>
+<div class="glass-panel rounded-xl flex flex-col w-full lg:w-2/3 h-full relative overflow-hidden">
+<div class="glow-overlay absolute inset-0 rounded-xl pointer-events-none"></div>
+<div class="h-16 border-b border-outline-variant/30 flex items-center px-lg bg-surface-container/50 justify-between"><div class="flex items-center gap-sm"><div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_rgba(181,196,255,0.7)] animate-pulse"></div><div><h2 class="font-headline-md text-headline-md font-bold">RAG AI AGENT</h2></div><span class="hidden sm:inline-block ml-2 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full" id="rag-context-badge">Context: None loaded</span></div><div class="flex items-center gap-sm"><button class="p-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded" id="chat-clear-btn"><span class="material-symbols-outlined text-lg">restart_alt</span></button></div></div>
+<div class="flex-1 overflow-y-auto p-lg flex flex-col gap-lg bg-[#0e0e11]/30" id="chat-messages-box">
+<div class="flex gap-md max-w-[85%]"><div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-primary text-sm">smart_toy</span></div><div class="bg-[#222226] border border-[#2A2A2E] rounded-xl rounded-tl-sm p-md shadow-sm ai-bubble"><p class="font-body-lg text-body-lg text-on-surface">Hello. I am ready to analyze your documents. Please upload a PDF to begin RAG with Gemini.</p></div></div>
+</div>
+<div class="p-lg bg-surface-container/50 border-t border-outline-variant/30 relative">
+<form class="bg-[#1C1C1F] border border-[#2A2A2E] rounded-xl flex items-center px-md py-sm focus-within:border-primary/50 transition-all shadow-sm" id="chat-form">
+<button class="text-on-surface-variant hover:text-primary p-xs mr-sm" id="chat-attach-btn" type="button"><span class="material-symbols-outlined">attach_file</span></button>
+<input autocomplete="off" class="flex-1 bg-transparent border-none text-on-surface font-body-lg text-body-lg focus:ring-0 placeholder-on-surface-variant/50 p-sm outline-none" id="chat-input" placeholder="Ask questions about loaded documents..." type="text">
+<button class="bg-primary text-on-primary w-10 h-10 rounded-lg flex items-center justify-center hover:bg-primary-container transition-colors shadow-sm ml-sm cursor-pointer active:scale-95" id="chat-send-btn" type="submit"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">send</span></button>
+</form>
+<div class="flex items-center justify-between mt-sm px-1"><span class="font-label-sm text-label-sm text-on-surface-variant/60">AI can make mistakes. Verify important information.</span><span class="font-mono text-[10px] text-on-surface-variant/50">Model: gemini-2.0-flash • FAISS RAG</span></div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+// ==================== BACKEND CONFIG ====================
+const API_BASE = "http://localhost:8000";
+// ======================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadArea = document.getElementById('upload-area');
+    const pdfFileInput = document.getElementById('pdf-file-input');
+    const uploadContent = document.getElementById('upload-content');
+    const uploadProcessing = document.getElementById('upload-processing');
+    const uploadCompleteBadge = document.getElementById('upload-complete-badge');
+    const uploadProgressFill = document.getElementById('upload-progress-fill');
+    const uploadPctLabel = document.getElementById('upload-pct-label');
+    const uploadStepText = document.getElementById('upload-step-text');
+    const scanBeamLine = document.getElementById('scan-beam-line');
+    const pdfStatusTag = document.getElementById('pdf-status-tag');
+    const uploadedFilename = document.getElementById('uploaded-filename');
+    const uploadedMeta = document.getElementById('uploaded-meta');
+    const reuploadBtn = document.getElementById('reupload-btn');
+    const viewChunksBtn = document.getElementById('view-chunks-btn');
+    const extractedTextBox = document.getElementById('extracted-text-box');
+    const extractedStatTokens = document.getElementById('extracted-stat-tokens');
+    const tabExtracted = document.getElementById('tab-extracted');
+    const tabPaste = document.getElementById('tab-paste');
+    const viewExtractedContainer = document.getElementById('view-extracted-container');
+    const viewPasteContainer = document.getElementById('view-paste-container');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessagesBox = document.getElementById('chat-messages-box');
+    const ragContextBadge = document.getElementById('rag-context-badge');
+    const chatClearBtn = document.getElementById('chat-clear-btn');
+    const chatAttachBtn = document.getElementById('chat-attach-btn');
+    const themeToggle = document.getElementById('theme-toggle');
+
+    let isUploading = false;
+
+    // Theme
+    if (themeToggle) themeToggle.addEventListener('click', () => { document.documentElement.classList.toggle('dark'); });
+
+    // Tabs
+    tabExtracted.addEventListener('click', () => { tabExtracted.classList.add('bg-surface-container-high','text-primary'); tabPaste.classList.remove('bg-surface-container-high','text-primary'); viewExtractedContainer.classList.remove('hidden'); viewPasteContainer.classList.add('hidden'); });
+    tabPaste.addEventListener('click', () => { tabPaste.classList.add('bg-surface-container-high','text-primary'); tabExtracted.classList.remove('bg-surface-container-high','text-primary'); viewPasteContainer.classList.remove('hidden'); viewExtractedContainer.classList.add('hidden'); });
+
+    // Check backend
+    async function checkBackend() {
+        try { const r = await fetch(`${API_BASE}/status`); const d = await r.json(); console.log("Backend:", d); return true; } catch(e){ console.error(e); addBotMessage("⚠️ Backend not running! Start with: uvicorn main:app --port 8000"); return false; }
+    }
+    checkBackend();
+
+    // Upload handlers
+    uploadArea.addEventListener('click', () => { if(!isUploading) pdfFileInput.click(); });
+    if(chatAttachBtn) chatAttachBtn.addEventListener('click', () => { if(!isUploading) pdfFileInput.click(); });
+    if(reuploadBtn) reuploadBtn.addEventListener('click', () => { resetUploadArea(); pdfFileInput.click(); });
+    if(viewChunksBtn) viewChunksBtn.addEventListener('click', () => { tabExtracted.click(); });
+
+    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('border-primary','bg-primary/10'); });
+    uploadArea.addEventListener('dragleave', e => { e.preventDefault(); uploadArea.classList.remove('border-primary','bg-primary/10'); });
+    uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('border-primary','bg-primary/10'); const file = e.dataTransfer.files[0]; if(file) handleRealUpload(file); });
+
+    pdfFileInput.addEventListener('change', e => { const file = e.target.files[0]; if(file) handleRealUpload(file); });
+
+    async function handleRealUpload(file) {
+        if(file.size > 10*1024*1024){ alert("Max 10MB"); return; }
+        if(!file.name.toLowerCase().endsWith('.pdf')){ alert("Only PDF"); return; }
+        
+        isUploading = true;
+        uploadArea.classList.add('pulse-border');
+        scanBeamLine.classList.remove('hidden');
+        uploadContent.classList.add('opacity-0','pointer-events-none');
+        uploadProcessing.classList.remove('opacity-0','pointer-events-none');
+        uploadCompleteBadge.classList.add('hidden');
+        pdfStatusTag.textContent = "Uploading...";
+        uploadStepText.textContent = "Uploading & indexing PDF...";
+        uploadProgressFill.style.width = "30%"; uploadPctLabel.textContent = "30%";
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            uploadProgressFill.style.width = "60%"; uploadPctLabel.textContent = "60%"; uploadStepText.textContent = "Generating embeddings (FAISS)...";
+            const response = await fetch(`${API_BASE}/upload-pdf`, { method: "POST", body: formData });
+            const data = await response.json();
+            if(!response.ok) throw new Error(data.detail || "Upload failed");
+
+            uploadProgressFill.style.width = "100%"; uploadPctLabel.textContent = "100%";
+            console.log("Upload success:", data);
+            finishUploadSuccess(file, data);
+
+        } catch(err){
+            console.error(err);
+            isUploading = false;
+            resetUploadArea();
+            addBotMessage(`❌ Upload failed: ${err.message}. Is backend running on ${API_BASE}?`);
+            alert(err.message);
+        }
+    }
+
+    function finishUploadSuccess(file, data){
+        isUploading = false;
+        scanBeamLine.classList.add('hidden');
+        uploadArea.classList.remove('pulse-border');
+        uploadProcessing.classList.add('opacity-0','pointer-events-none');
+        uploadCompleteBadge.classList.remove('hidden');
+        uploadedFilename.textContent = data.filename || file.name;
+        uploadedMeta.textContent = `${data.chunks_indexed || 0} chunks • ${(data.size/1024/1024).toFixed(2)} MB`;
+        pdfStatusTag.textContent = "Vectorized";
+        pdfStatusTag.className = "font-mono text-[11px] text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 rounded";
+
+        extractedTextBox.innerHTML = `<div class="text-emerald-400 font-mono text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Indexed: ${escapeHtml(data.filename)}</div><div class="text-xs text-on-surface-variant">Chunks indexed: <b class="text-primary">${data.chunks_indexed}</b><br>File size: ${(data.size/1024).toFixed(1)} KB<br><br>Your PDF is now searchable. Ask questions in the chat on the right.</div>`;
+        extractedStatTokens.textContent = `Chunks: ${data.chunks_indexed}`;
+        tabExtracted.click();
+        ragContextBadge.textContent = `Context: ${data.filename} (${data.chunks_indexed} chunks)`;
+        ragContextBadge.classList.remove('hidden');
+        addBotMessage(`✅ **${data.filename}** indexed successfully with ${data.chunks_indexed} chunks. Ask me anything about it! (Using Gemini 2.0 Flash)`);
+    }
+
+    function resetUploadArea(){
+        uploadContent.classList.remove('opacity-0','pointer-events-none');
+        uploadProcessing.classList.add('opacity-0','pointer-events-none');
+        uploadCompleteBadge.classList.add('hidden');
+        scanBeamLine.classList.add('hidden');
+        pdfStatusTag.textContent = "Ready";
+    }
+
+    // CHAT - REAL BACKEND CALL
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const question = chatInput.value.trim();
+        if(!question) return;
+        addUserMessage(question);
+        chatInput.value = "";
+        chatInput.disabled = true;
+
+        const thinkingDiv = addBotMessage("Thinking... 🔍 Searching FAISS + Gemini...", false, true);
+
+        try {
+            const response = await fetch(`${API_BASE}/ask`, {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({question: question, history: []})
+            });
+            const data = await response.json();
+            if(!response.ok) throw new Error(data.detail || "Ask failed");
+
+            // Remove thinking
+            if(thinkingDiv && thinkingDiv.parentNode) thinkingDiv.parentNode.removeChild(thinkingDiv);
+
+            console.log("RAG Response:", data);
+            addBotMessage(data.answer, true, false, data.sources || []);
+
+        } catch(err){
+            console.error(err);
+            if(thinkingDiv && thinkingDiv.parentNode) thinkingDiv.parentNode.removeChild(thinkingDiv);
+            addBotMessage(`❌ Error: ${err.message}\n\nCheck if backend is running and Gemini API key is valid.`);
+        } finally {
+            chatInput.disabled = false;
+            chatInput.focus();
+        }
+    });
+
+    if(chatClearBtn) chatClearBtn.addEventListener('click', () => {
+        chatMessagesBox.innerHTML = `<div class="flex gap-md max-w-[85%]"><div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-primary text-sm">smart_toy</span></div><div class="bg-[#222226] border border-[#2A2A2E] rounded-xl rounded-tl-sm p-md shadow-sm ai-bubble"><p class="font-body-lg text-body-lg">Chat cleared. Ready for questions.</p></div></div>`;
+    });
+
+    function addUserMessage(message){
+        const div = document.createElement('div');
+        div.className = 'flex gap-md max-w-[85%] self-end flex-row-reverse';
+        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/30 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-surface-variant text-sm">person</span></div><div class="bg-primary-container text-on-primary-container rounded-xl rounded-tr-sm p-md shadow-sm"><p class="font-body-lg text-body-lg text-white">${escapeHtml(message)}</p></div>`;
+        chatMessagesBox.appendChild(div); chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+    }
+
+    function addBotMessage(text, hasCitations=false, isThinking=false, sources=[]){
+        const div = document.createElement('div');
+        div.className = 'flex gap-md max-w-[85%]';
+        let citationHtml = '';
+        if(sources && sources.length>0){
+            citationHtml = `<div class="flex flex-wrap gap-2 mt-3">${sources.map(s=>`<span class="bg-[#131316] rounded px-2 py-1 font-mono text-xs text-secondary/80 border border-outline-variant/20">Page ${s.page || s.page_number || '?'}</span>`).join('')}</div>`;
+        } else if(hasCitations){
+            citationHtml = `<div class="mt-2 pt-2 border-t border-outline-variant/20 flex items-center gap-2 text-xs font-mono text-cyan-400"><span class="material-symbols-outlined text-sm">verified</span><span>Grounded with FAISS context</span></div>`;
+        }
+        const displayText = isThinking ? `<span class="animate-pulse">${escapeHtml(text)}</span>` : parseMarkdown(text);
+        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-primary text-sm">smart_toy</span></div><div class="bg-[#222226] border border-[#2A2A2E] rounded-xl rounded-tl-sm p-md shadow-sm ai-bubble"><div class="font-body-lg text-body-lg text-on-surface leading-relaxed">${displayText}</div>${citationHtml}</div>`;
+        chatMessagesBox.appendChild(div); chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+        return div;
+    }
+
+    function escapeHtml(str){ return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+    function parseMarkdown(text){
+        if(!text) return "No answer";
+        text = escapeHtml(text);
+        text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        text = text.replace(/\n/g, "<br>");
+        return text;
+    }
+});
+</script>
+</body></html>
