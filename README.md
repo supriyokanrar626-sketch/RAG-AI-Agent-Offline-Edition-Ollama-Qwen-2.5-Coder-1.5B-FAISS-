@@ -15,6 +15,10 @@ A private RAG dashboard where everything runs on your laptop — your PDF never 
 - **Fast Search** — FAISS + 384d local embeddings
 - **Grounded Answers** — Answers with [Page X] citations
 
+##  🍂 
+
+<img width="1920" height="1080" alt="Screenshot (103)" src="https://github.com/user-attachments/assets/5662be46-4ce9-417d-9d08-b6d6c08ff4aa" />
+
 ## 🏗️ How It Works
 
 ```
